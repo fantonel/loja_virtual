@@ -2,11 +2,12 @@
 CREATE TABLE formapagamento(
  id UUID NOT NULL DEFAULT uuid_generate_v4(),
  formapagamento CHARACTER VARYING(60) NOT NULL,
+ ativa BOOLEAN NOT NULL DEFAULT TRUE,
  CONSTRAINT  formapagamento_pk PRIMARY KEY(id),
  CONSTRAINT  formapagamento_unique_01 UNIQUE(formapagamento) 
 );
 ALTER TABLE formapagamento OWNER TO postgres;
-INSERT INTO formapagamento(formapagamento) VALUES ('BOLETO BANCÁRIO'),('CARTÃO DE CRÉDITO'),('CARTÃO DE DÉBITO'),('PIX');
+INSERT INTO formapagamento(formapagamento) VALUES ('Boleto Bancário'),('Cartão de Crédito'),('Cartão de Débito'),('Pix');
 
 -- DROP TABLE IF EXISTS cupomdesconto;
 CREATE TABLE cupomdesconto(
@@ -22,5 +23,5 @@ CREATE TABLE cupomdesconto(
 );
 ALTER TABLE formapagamento OWNER TO postgres;
 INSERT INTO cupomdesconto(codigo,descricao,percentual,validadeinicial,validadefinal) 
-     VALUES ('FOLIA5%','CARNAVAL DE OFERTAS, 5% PARA PAGAMETNO À VISTA',5.00,'2023-02-01'::DATE,'2023-02-21'::DATE),
-	        ('PASCOA10%','PÁSCOA DE DESCONTO, 10% PARA PAGAMETNO À VISTA',10.00,'2023-04-01'::DATE,'2023-04-09'::DATE);
+     VALUES ('FOLIA5%','Carnaval de Ofertas, 5% para pagamento à vista',5.00,'2023-02-01'::DATE,'2023-02-21'::DATE),
+	        ('PASCOA10%','Páscoa de Desconto, 10% para pagamento à vista',10.00,'2023-04-01'::DATE,'2023-04-09'::DATE);
