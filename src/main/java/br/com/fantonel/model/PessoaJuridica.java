@@ -6,9 +6,12 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "pessoajuridica")
@@ -16,6 +19,8 @@ public class PessoaJuridica implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
+	@GeneratedValue(generator = "UUID")
+	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
 	private UUID id;
 	
 	@NotBlank(message = "Informe o CNPJ")
@@ -40,6 +45,9 @@ public class PessoaJuridica implements Serializable {
 	@NotBlank(message = "Informe o email principal")
 	@Column(name = "emailprincipal", nullable = false, length = 120)
 	private String emailPrincipal;
+	
+	@Column(name = "excluida", nullable = false)
+	private boolean excluida = false;
 	
 	public PessoaJuridica() {}
 
@@ -97,6 +105,14 @@ public class PessoaJuridica implements Serializable {
 
 	public void setEmailPrincipal(String emailPrincipal) {
 		this.emailPrincipal = emailPrincipal;
+	}	
+
+	public boolean isExcluida() {
+		return excluida;
+	}
+
+	public void setExcluida(boolean excluida) {
+		this.excluida = excluida;
 	}
 
 	@Override
