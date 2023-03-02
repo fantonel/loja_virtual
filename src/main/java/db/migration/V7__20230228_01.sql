@@ -1,0 +1,24 @@
+-- DROP TABLE IF EXISTS endereco;
+CREATE TABLE endereco(
+ id UUID NOT NULL DEFAULT uuid_generate_v4(),
+ cep CHARACTER VARYING(10) NOT NULL,
+ tipologradouro CHARACTER VARYING(20) NOT NULL,
+ logradouro CHARACTER VARYING(256) NOT NULL,
+ numero CHARACTER VARYING(20) NOT NULL,
+ complemento CHARACTER VARYING(60),
+ bairro CHARACTER VARYING(100) NOT NULL,
+ localidade CHARACTER VARYING(60) NOT NULL,
+ uf CHARACTER VARYING(2) NOT NULL,
+ ibge CHARACTER VARYING(10),
+ gia CHARACTER VARYING(10),
+ ddd CHARACTER VARYING(2),
+ siafi CHARACTER VARYING(10),
+ tipoendereco VARCHAR(20) NOT NULL,
+ excluido boolean NOT NULL DEFAULT false,
+ pessoa_id UUID,
+ empresa_id UUID, 
+ CONSTRAINT endereco_pk PRIMARY KEY(id),
+ CONSTRAINT endereco_fk01 FOREIGN KEY(pessoa_id) REFERENCES pessoafisica(id),
+ CONSTRAINT endereco_fk02 FOREIGN KEY(empresa_id) REFERENCES pessoajuridica(id)
+ );
+ ALTER TABLE endereco OWNER TO postgres;
