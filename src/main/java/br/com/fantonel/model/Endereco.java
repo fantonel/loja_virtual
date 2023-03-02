@@ -77,7 +77,6 @@ public class Endereco implements Serializable {
 	@Column(name = "siafi", nullable = false)
 	private String siafi;
 	
-	@NotBlank(message = "Informe a finalidade do endereço")
 	@Column(name = "tipoendereco", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private TipoEndereco tipoEndereco;
