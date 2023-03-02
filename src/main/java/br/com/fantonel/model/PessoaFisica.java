@@ -1,14 +1,19 @@
 package br.com.fantonel.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -48,6 +53,9 @@ public class PessoaFisica implements Serializable {
 		
 	@Column(name = "excluida", nullable = false)
 	private boolean excluida;
+	
+	@OneToMany(mappedBy = "pessoaFisica", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Endereco> enderecos = new ArrayList<>();
 	
 	public PessoaFisica() {}
 
@@ -105,6 +113,14 @@ public class PessoaFisica implements Serializable {
 
 	public void setExcluida(boolean excluida) {
 		this.excluida = excluida;
+	}
+	
+	public List<Endereco> getEnderecos() {
+		return enderecos;
+	}
+
+	public void setEnderecos(List<Endereco> enderecos) {
+		this.enderecos = enderecos;
 	}
 
 	@Override

@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -33,6 +34,7 @@ public class Endereco implements Serializable {
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
 	private UUID id;
 	
+	@NotBlank(message = "Informe o cep")
 	@Column(name = "cep", nullable = false, length=10)
 	private String cep;
 	
@@ -40,21 +42,26 @@ public class Endereco implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private TipoLogradouro tipoLogradouro;	
 	
+	@NotBlank(message = "Informe o logradouro")
 	@Column(name = "logradouro", nullable = false)
 	private String logradouro;
 	
+	@NotBlank(message = "Informe o número")
 	@Column(name = "numero", nullable = false)
 	private String numero;
 	
 	@Column(name = "complemento", nullable = false)
 	private String complemento;
 	
+	@NotBlank(message = "Informe o bairro")
 	@Column(name = "bairro", nullable = false)
 	private String bairro;
 	
+	@NotBlank(message = "Informe a cidade")
 	@Column(name = "localidade", nullable = false)
 	private String localidade;
 	
+	@NotBlank(message = "Informe o estado")
 	@Column(name = "uf", nullable = false)
 	private String uf;
 	
@@ -70,6 +77,7 @@ public class Endereco implements Serializable {
 	@Column(name = "siafi", nullable = false)
 	private String siafi;
 	
+	@NotBlank(message = "Informe a finalidade do endereço")
 	@Column(name = "tipoendereco", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private TipoEndereco tipoEndereco;
