@@ -7,6 +7,7 @@ import java.util.UUID;
 import javax.validation.Valid;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.fantonel.excepts.LojaVirtualExceptions;
+import br.com.fantonel.model.Endereco;
 import br.com.fantonel.model.PessoaJuridica;
 import br.com.fantonel.service.PessoaJuridicaService;
 
@@ -39,6 +41,12 @@ public class PessoaJuridicaController {
 		
 		if (pessoaJuridica.getId() == null && pessoaJuridicaService.existsByEmail(pessoaJuridica.getEmailPrincipal()))
 			throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND, "Já existe Empresa cadastrada, com o Email informado!");
+		
+		for (Endereco endereco : pessoaJuridica.getEnderecos()) {			
+			if (endereco.getPessoaJuridica() == null)
+				endereco.setPessoaJuridica(pessoaJuridica);
+			validarEndereco(endereco);
+		}
 		
 		if (pessoaJuridica.getId() == null)
 			pessoaJuridicaService.save(pessoaJuridica);
@@ -101,5 +109,24 @@ public class PessoaJuridicaController {
 			return ResponseEntity.status(HttpStatus.OK).body(entity.get());
 		
 		throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"Registro não encontrado");
+	}
+	
+	private void validarEndereco(Endereco endereco) throws LojaVirtualExceptions{
+		if (StringUtils.isBlank(endereco.getCep()))
+			throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"Informe o cep do endereço");
+		if (endereco.getTipoLogradouro() == null)
+			throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"Informe o tipo do logradouro");
+		if (StringUtils.isBlank(endereco.getLogradouro()))
+			throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"Informe o logradouro");
+		if (StringUtils.isBlank(endereco.getNumero()))
+			throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"Informe o número");		
+		if (StringUtils.isBlank(endereco.getBairro()))
+			throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"Informe o bairro");
+		if (StringUtils.isBlank(endereco.getLocalidade()))
+			throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"Informe a cidade");
+		if (StringUtils.isBlank(endereco.getUf()))
+			throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"Informe a o estado");		
+		if (endereco.getTipoEndereco() == null)
+			throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"Informe o tipo do endereço");		
 	}
 }

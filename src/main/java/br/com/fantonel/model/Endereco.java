@@ -86,6 +86,7 @@ public class Endereco implements Serializable {
 	@JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(name = "pessoa_fisica_fk01", value = ConstraintMode.CONSTRAINT))
 	private PessoaFisica pessoaFisica;
 	
+	@JsonIgnore
 	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(name = "pessoa_juridica_fk01", value = ConstraintMode.CONSTRAINT))
 	private PessoaJuridica pessoaJuridica;
