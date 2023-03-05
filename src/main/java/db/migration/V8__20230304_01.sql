@@ -45,6 +45,7 @@ ALTER TABLE produtocategoria OWNER TO postgres;
 -- DROP TABLE IF EXISTS produtoconfiguracao;
 CREATE TABLE produtoconfiguracao(
 	id UUID NOT NULL DEFAULT uuid_generate_v4(),
+	produto_id UUID NOT NULL,
 	cor CHARACTER VARYING(15),
 	altura NUMERIC(7,3) NOT NULL DEFAULT 0.00,
 	largura NUMERIC(7,3) NOT NULL DEFAULT 0.00,
@@ -55,7 +56,8 @@ CREATE TABLE produtoconfiguracao(
 	unidademedida_id UUID NOT NULL,
 	numerovisualizacoes INTEGER NOT NULL DEFAULT 0.00,
 	CONSTRAINT produtoconfiguracao_pk PRIMARY KEY(id),
-	CONSTRAINT produtoconfiguracao_fk01 FOREIGN KEY(unidademedida_id) REFERENCES unidademedida(id)
+	CONSTRAINT produtoconfiguracao_fk01 FOREIGN KEY(produto_id) REFERENCES produto(id),
+	CONSTRAINT produtoconfiguracao_fk02 FOREIGN KEY(unidademedida_id) REFERENCES unidademedida(id)
 );
 ALTER TABLE produtoconfiguracao OWNER TO postgres;
 
