@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -22,10 +23,14 @@ public class UnidadeMedida implements Serializable {
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
 	private UUID id;
+	
 	@NotBlank(message = "Informe a sigla")
+	@Size(max = 10, message = "Sigla deve ter no máximo, 10 caracteres")
 	@Column(name = "sigla", nullable = false, length = 10)
 	private String sigla;
+		
 	@NotBlank(message = "Informe a descrição")
+	@Size(max = 60, message = "Descrição deve ter no máximo, 60 caracteres")
 	@Column(name = "descricao", nullable = false, length = 60)
 	private String descricao;
 
