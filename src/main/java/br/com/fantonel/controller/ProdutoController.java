@@ -102,7 +102,7 @@ public class ProdutoController {
 		if (!produtoService.existsById(id))
 			throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND, "O produto não foi encontrado, para ser excluído!");
 		
-		//Verificações necessárias, a medida que o projeto avanã.
+		//Verificações necessárias, a medida que o projeto avança.
 		//Não permitir se possui avaliação;
 		//Não permitir se possui nota fiscal de compra;
 		//Não permitir se possui nota fiscal de venda.
@@ -143,7 +143,7 @@ public class ProdutoController {
 	public ResponseEntity<?> listarPorNome(@PathVariable String nome) throws LojaVirtualExceptions{
 		List<Produto> listaPorNome = produtoService.listarPorNome(nome);
 		if (listaPorNome == null || listaPorNome.size() == 0)
-			return ResponseEntity.status(HttpStatus.OK).body("Nenhum produto localizado com o nome informado.");
+			return ResponseEntity.status(HttpStatus.OK).body("Nenhum produto foi localizado.");
 		
 		return ResponseEntity.status(HttpStatus.OK).body(listaPorNome);
 	}
