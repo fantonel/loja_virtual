@@ -58,27 +58,28 @@ public class ControleExcecoes extends ResponseEntityExceptionHandler {
 	@ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class})
 	@Override
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
-		String msg = "";
+		String msg = "";		
 		if (ex instanceof MethodArgumentNotValidException) {
 			List<ObjectError> list = ((MethodArgumentNotValidException) ex).getBindingResult().getAllErrors();
 			for (ObjectError objE : list) {
 				msg += objE.getDefaultMessage()+"\n";
 			}
-		}else if(ex instanceof HttpRequestMethodNotSupportedException) {
-			System.out.println(ex.getMessage());
-			msg = "Requisição não suporte método Get: " + ((HttpRequestMethodNotSupportedException) ex).getMessage();
-		}else if(ex instanceof HttpMessageNotReadableException) {
-			msg = "Não está sendo enviado dados para o corpo da requisição\n"+ex.getCause().getMessage();
-		}else{
-			msg = ex.getMessage();
+		}else {
+			if(ex instanceof HttpRequestMethodNotSupportedException) {		
+				System.out.println(ex.getMessage());
+				msg = "Requisição não suporte método Get: " + ((HttpRequestMethodNotSupportedException) ex).getMessage();
+			}else if(ex instanceof HttpMessageNotReadableException) {
+				msg = "Não está sendo enviado dados para o corpo da requisição\n"+ex.getCause().getMessage();
+			}else{
+				msg = ex.getMessage();
+			}
+			//Envio de email de alerta ao responsável pelo projeto
+			sendEmailException(ExceptionUtils.getStackTrace(ex), emailAdm);
 		}
 		
 		//lançar exceção no console, para consulta de log no servidor.
-		ex.printStackTrace();
-		
-		//Envio de email de alerta ao responsável pelo projeto
-		sendEmailException(ExceptionUtils.getStackTrace(ex), emailAdm);
-		
+		ex.printStackTrace();		
+		//
 		ObjetoDeExcecoes objetoDeErroModel = new ObjetoDeExcecoes(status.value()+" --> "+status.getReasonPhrase(), msg);
 		return new ResponseEntity<Object>(objetoDeErroModel, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
