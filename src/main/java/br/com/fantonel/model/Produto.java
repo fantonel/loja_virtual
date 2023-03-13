@@ -53,6 +53,9 @@ public class Produto implements Serializable {
 	
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<ProdutoConfiguracao> produtoConfiguracoes;
+	
+	@OneToMany(mappedBy = "produto", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<ProdutoImagem> imagens;
 
 	public Produto() {
 	}
