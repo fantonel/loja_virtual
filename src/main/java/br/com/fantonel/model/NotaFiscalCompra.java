@@ -3,6 +3,7 @@ package br.com.fantonel.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -13,6 +14,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -22,8 +24,12 @@ import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
-@Table(name = "notafiscalcompra")
+@Table(name = "notafiscalcompra")	
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class NotaFiscalCompra implements Serializable {
 	private static final long serialVersionUID = -8128908999803345356L;
 	
@@ -70,6 +76,9 @@ public class NotaFiscalCompra implements Serializable {
 	@OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE}, fetch = FetchType.EAGER)
 	@JoinColumn(name = "pessoajuridica_id", referencedColumnName = "id")
 	private PessoaJuridica pessoaJuridica;
+	
+	@OneToMany(mappedBy = "notaFiscalCompra", cascade = CascadeType.ALL, fetch = FetchType.LAZY)	
+	private List<NotaFiscalCompraItens> notaFiscalCompraItens;
 	
 	public NotaFiscalCompra() {
 	}	
@@ -144,6 +153,14 @@ public class NotaFiscalCompra implements Serializable {
 
 	public void setPessoaJuridica(PessoaJuridica pessoaJuridica) {
 		this.pessoaJuridica = pessoaJuridica;
+	}
+
+	public List<NotaFiscalCompraItens> getNotaFiscalCompraItens() {
+		return notaFiscalCompraItens;
+	}
+
+	public void setNotaFiscalCompraItens(List<NotaFiscalCompraItens> notaFiscalCompraItens) {
+		this.notaFiscalCompraItens = notaFiscalCompraItens;
 	}
 
 	@Override
