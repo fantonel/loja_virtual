@@ -81,7 +81,7 @@ Composição: 85% Poliamida 15% Elastano
 O Suplex é um fibra bastante flexível, durável, resistente e macia. É ideal para quem pratica atividades físicas que requer liberdade de movimento.
 O que mais chama atenção no Suplex com certeza é o toque macio, as peças nesse tecido são muito boas de pegar. Outro ponto forte é a aderência ao corpo e o conforto térmico.
 As peças em Suplex não criam odores, são de fácil lavagem e não desbotam. Por essas e outras características, o Suplex é o queridinho de quem treina prezando conforto e qualidade.',
-0,'https://www.timbore.com/legging-fuso-training-basic-suplex','8ed38ce5-fba6-46c5-970d-f20fff37fdcc'
+0,'https://www.timbore.com/legging-fuso-training-basic-suplex',(SELECT id FROM marca WHERE marca='Atomic' LIMIT 1)
 ),
 ('5507476a-55f4-46a7-9c24-d076bcc43c2a','Short Runner Timboré',
 'Short super comfy e atual fabricado em tecido leve e macio de excelência elasticidade e toque geladinho. Modelo super versátil com mood despojado que pode ser usado dentro e fora da academia. Possui bolso com zíper e shortinho interno garantindo conforto e segurança. Detalhe do logo Timboré em termocolante.
@@ -89,11 +89,11 @@ Tecido Interno : Acqua Light
 Composição: 90% Poliamida 10% Elastano 
 Tecido Externo : Dry 
 Composição: 88% Poliamida 12% Elastano ',
-0,'https://www.timbore.com/short-runner-timbore','8ed38ce5-fba6-46c5-970d-f20fff37fdcc'
+0,'https://www.timbore.com/short-runner-timbore',(SELECT id FROM marca WHERE marca='Timboré Acqua' LIMIT 1)
 ),
 ('e8c5049d-4d8e-4e41-a7ae-bd76c94f2691','Saída de Praia Camisa Leisure',
 'Saída de Praia Camisa Leisure',
-0,'https://www.timbore.com/saida-chic-classic','f09126b2-d291-41e4-999d-86356859ea6f'
+0,'https://www.timbore.com/saida-chic-classic',(SELECT id FROM marca WHERE marca='Atlantic' LIMIT 1)
 );
 
 INSERT INTO produtocategoria (produto_id,categoria_id) 
