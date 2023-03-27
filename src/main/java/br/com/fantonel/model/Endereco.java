@@ -81,6 +81,9 @@ public class Endereco implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private TipoEndereco tipoEndereco;
 	
+	@Column(nullable = false)
+	private boolean ativo = true;
+	
 	@JsonIgnore
 	@ManyToOne(targetEntity = PessoaFisica.class)
 	@JoinColumn(name = "pessoa_id", nullable = true, foreignKey = @ForeignKey(name = "endereco_fk01", value = ConstraintMode.CONSTRAINT))
@@ -204,6 +207,14 @@ public class Endereco implements Serializable {
 
 	public void setTipoEndereco(TipoEndereco tipoEndereco) {
 		this.tipoEndereco = tipoEndereco;
+	}	
+
+	public boolean isAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(boolean ativo) {
+		this.ativo = ativo;
 	}
 
 	public PessoaFisica getPessoaFisica() {
