@@ -1,0 +1,5 @@
+ALTER TABLE pedidorastreio ADD COLUMN cidade VARCHAR(60) NOT NULL;
+
+ALTER TABLE pedidorastreio ADD COLUMN uf VARCHAR(2) NOT NULL;
+
+ALTER TABLE pedidorastreio ADD COLUMN local VARCHAR(120) NOT NULL;
