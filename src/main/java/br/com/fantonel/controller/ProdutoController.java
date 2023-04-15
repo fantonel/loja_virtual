@@ -70,7 +70,7 @@ public class ProdutoController {
 			
 			var optCategoria = categoriaService.findById(categoria.getId());
 			if (!optCategoria.isPresent())
-				throw new LojaVirtualExceptions("A categoria "+categoria.getCategoria()+" não é valida. Verifique!");
+				throw new LojaVirtualExceptions("A categoria informada não é valida. Verifique!");
 			categoria = optCategoria.get();
 		}		
 		//Configuração do Produto
@@ -83,6 +83,18 @@ public class ProdutoController {
 				if (!optUniMed.isPresent())
 					throw new LojaVirtualExceptions("Verifique a unidade de medida, de cada configuração do produto!");
 				prodConfig.setUnidadeMedida(optUniMed.get());
+				
+				if (prodConfig.getAltura() == null || prodConfig.getAltura() < 0)
+					throw new LojaVirtualExceptions("Informe a altura do produto!");
+				
+				if (prodConfig.getLargura() == null || prodConfig.getLargura() < 0)
+					throw new LojaVirtualExceptions("Informe a largura do produto!");
+				
+				if (prodConfig.getProfundidade() == null || prodConfig.getProfundidade() < 0)
+					throw new LojaVirtualExceptions("Informe a profundidade do produto!");
+				
+				if (prodConfig.getEstoqueMinimo() == null || prodConfig.getEstoqueMinimo() <= 0)
+					throw new LojaVirtualExceptions("Estoque mínimo, deve ser maior que 0 (zero)!");
 			}
 		}
 		//		

@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Min;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -32,27 +32,23 @@ public class ProdutoConfiguracao implements Serializable {
 	@Column(name = "cor", nullable = false)
 	private String cor;
 	
-	@Size(min = 0, message = "A altura não pode ser menor que 0 (zero)")
 	@Column(name = "altura", nullable = false)
 	private Double altura;
 	
-	@Size(min = 0, message = "A largura não pode ser menor que 0 (zero)")
 	@Column(name = "largura", nullable = false)
 	private Double largura;
 	
-	@Size(min = 0, message = "A profundidade não pode ser menor que 0 (zero)")
 	@Column(name = "profundidade", nullable = false)
 	private Double profundidade;
 	
-	@Size(min = 0, message = "O peso não pode ser menor que 0 (zero)")
 	@Column(name = "peso", nullable = false)
 	private Double peso;
 	
-	@Size(min = 0, message = "O estoquue atual não pode ser inferior a 0 (zero)")
+	@Min(value = 0, message = "O estoquue atual não pode ser inferior a 0 (zero)")
 	@Column(name = "estoqueatual", nullable = false)
 	private Integer estoqueAtual = 0;
 	
-	@Size(min = 0, message = "O estoque mínimo não pode ser inferior a 0 (zero)")
+	@Min(value = 0, message = "O estoque mínimo não pode ser inferior a 0 (zero)")
 	@Column(name = "estoqueminimo", nullable = false)
 	private Integer estoqueMinimo = 0;
 	

@@ -19,6 +19,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -31,12 +33,18 @@ public class Produto implements Serializable {
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
 	private UUID id;
-	@Column(name = "nome", nullable = false, length = 120)
+	
+	@Min(value = 5, message = "O nome do produto deve conter, no mínimo, 10 caracteres!")
+	@Column(name = "nome")
 	private String nome;
+	
+	@NotBlank(message = "Informe a descrição do produto!")
 	@Column(name = "descricao", nullable = false, length = 2000)
 	private String descricao;
+	
 	@Column(name = "numerovisualizacoes", nullable = false)
 	private Double numeroVisualizacoes;
+	
 	@Column(name = "linkyoutube", nullable = false)
 	private String linkYoutube;
 	
