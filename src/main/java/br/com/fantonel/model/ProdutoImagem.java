@@ -38,7 +38,6 @@ public class ProdutoImagem implements Serializable {
 	@Column(name = "imagemoriginal", nullable = false)
 	private String imagemOriginal;
 	
-	@NotBlank(message = "Informe a imagem em miniatura")
 	@Column(name = "imagemminiatura", nullable = false)
 	private String imagemMiniatura;
 	

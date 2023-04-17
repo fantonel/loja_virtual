@@ -23,6 +23,7 @@ import br.com.fantonel.excepts.LojaVirtualExceptions;
 import br.com.fantonel.model.ProdutoImagem;
 import br.com.fantonel.service.ProdutoImagemService;
 import br.com.fantonel.service.ProdutoService;
+import br.com.fantonel.util.ImageConverter;
 
 @RestController
 @RequestMapping("api/v1/produtoimagens")
@@ -46,6 +47,11 @@ public class ProdutoImagemController {
 			throw new LojaVirtualExceptions("Informe o produto, que terá a imagem vinculada!");
 		produtoImagem.setProduto(produto.get());
 		
+		if (produtoImagem.getImagemOriginal() == null || produtoImagem.getImagemOriginal().trim().length() == 0)
+			throw new LojaVirtualExceptions("Informe a imagem que será vinculada ao produto!");
+		
+		produtoImagem.setImagemMiniatura(ImageConverter.toPngBase64Converter(produtoImagem.getImagemOriginal()));
+		
 		if (produtoImagem.getId() == null)
 			produtoImagemService.save(produtoImagem);
 		else {
@@ -65,6 +71,17 @@ public class ProdutoImagemController {
 		produtoImagemService.deleteById(id);		
 				
 		return ResponseEntity.status(HttpStatus.OK).body("Imagem excluída com sucesso!");
+	}
+	
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+	@DeleteMapping("/excluirTodas/{produtoId}")
+	public ResponseEntity<?> excluirTodas(@PathVariable UUID produtoId) throws LojaVirtualExceptions, IllegalAccessException, InvocationTargetException{
+		if (!produtoService.existsById(produtoId))
+			throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND, "O produto não foi encontrado, para a exclusão das imagens!");
+		
+		produtoImagemService.excluirTodas(produtoId);
+				
+		return ResponseEntity.status(HttpStatus.OK).body("Imagens excluídas com sucesso!");
 	}
 	
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")

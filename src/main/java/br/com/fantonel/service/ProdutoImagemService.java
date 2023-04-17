@@ -33,6 +33,10 @@ public class ProdutoImagemService {
 		produtoImagemRepository.deleteById(id);
 	}
 	
+	public void excluirTodas(UUID id) {
+		produtoImagemRepository.excluirTodas(id);
+	}
+	
 	public boolean existsById(UUID id) {
 		return produtoImagemRepository.existsById(id);
 	}
