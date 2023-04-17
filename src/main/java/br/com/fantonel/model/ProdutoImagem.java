@@ -17,8 +17,12 @@ import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(name = "produtoimagem")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ProdutoImagem implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -31,11 +35,11 @@ public class ProdutoImagem implements Serializable {
 	private String titulo;
 	
 	@NotBlank(message = "Informe a imagem original")
-	@Column(name = "imagemoriginal", nullable = false, length = 300)
+	@Column(name = "imagemoriginal", nullable = false)
 	private String imagemOriginal;
 	
 	@NotBlank(message = "Informe a imagem em miniatura")
-	@Column(name = "imagemminiatura", nullable = false, length = 300)
+	@Column(name = "imagemminiatura", nullable = false)
 	private String imagemMiniatura;
 	
 	@ManyToOne(targetEntity = Produto.class)

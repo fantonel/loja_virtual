@@ -23,10 +23,12 @@ import br.com.fantonel.excepts.LojaVirtualExceptions;
 import br.com.fantonel.model.Categoria;
 import br.com.fantonel.model.Produto;
 import br.com.fantonel.model.ProdutoConfiguracao;
+import br.com.fantonel.model.ProdutoImagem;
 import br.com.fantonel.service.CategoriaService;
 import br.com.fantonel.service.MarcaService;
 import br.com.fantonel.service.ProdutoService;
 import br.com.fantonel.service.UnidadeMedidaService;
+import br.com.fantonel.util.ImageConverter;
 
 @RestController
 @RequestMapping("api/v1/produtos")
@@ -46,6 +48,9 @@ public class ProdutoController {
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 	@PostMapping("/salvar")
 	public ResponseEntity<Produto> salvar(@RequestBody @Valid Produto produto) throws LojaVirtualExceptions, IllegalAccessException, InvocationTargetException{
+		if (produto.getNome() == null || produto.getNome().trim().length() < 10)
+				throw new LojaVirtualExceptions("O nome do produto deve conter, no mínimo, 10 caracteres!");
+		
 		//Marca do produto
 		if (produto.getMarca() == null)
 			throw new LojaVirtualExceptions("Informe a marca do produto!");
@@ -79,6 +84,7 @@ public class ProdutoController {
 				prodConfig.setProduto(produto);
 				if (prodConfig.getUnidadeMedida() == null || prodConfig.getUnidadeMedida().getId() == null)
 					throw new LojaVirtualExceptions("Informe a unidade de medida, de cada configuração do produto!");
+				
 				var optUniMed = unidadeMedidaService.findById(prodConfig.getUnidadeMedida().getId());
 				if (!optUniMed.isPresent())
 					throw new LojaVirtualExceptions("Verifique a unidade de medida, de cada configuração do produto!");
@@ -96,6 +102,13 @@ public class ProdutoController {
 				if (prodConfig.getEstoqueMinimo() == null || prodConfig.getEstoqueMinimo() <= 0)
 					throw new LojaVirtualExceptions("Estoque mínimo, deve ser maior que 0 (zero)!");
 			}
+		}
+		//Imagens do Produto
+		if (produto.getImagens() != null && !produto.getImagens().isEmpty()) {
+			for (ProdutoImagem pImg : produto.getImagens()) {
+				pImg.setProduto(produto);
+				pImg.setImagemMiniatura(ImageConverter.toPngBase64Converter(pImg.getImagemOriginal()));
+			}			
 		}
 		//		
 		if (produto.getId() == null)
