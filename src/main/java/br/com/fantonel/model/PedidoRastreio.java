@@ -16,11 +16,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(name = "pedidorastreio")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class PedidoRastreio implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -33,12 +38,15 @@ public class PedidoRastreio implements Serializable {
 	@Column(name = "datahora", nullable = false)
 	private Date dataHora;
 	
+	@NotBlank(message = "Informe o status do rastreio")
 	@Column(nullable = false)
 	private String status;
 	
+	@NotBlank(message = "Informe a cidade")
 	@Column(nullable = false)
 	private String cidade;
 	
+	@NotBlank(message = "Informe o estado do país")
 	@Column(nullable = false)
 	private String uf;
 	
