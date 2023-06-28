@@ -3,6 +3,7 @@ package br.com.fantonel.model;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -58,7 +59,7 @@ public class Produto implements Serializable {
 	private List<Categoria> produtoCategorias;
 	
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-	private List<ProdutoConfiguracao> produtoConfiguracoes;
+	private Set<ProdutoConfiguracao> produtoConfiguracoes;
 	
 	@OneToMany(mappedBy = "produto", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<ProdutoImagem> imagens;
@@ -122,11 +123,13 @@ public class Produto implements Serializable {
 		this.produtoCategorias = produtoCategorias;
 	}	
 
-	public List<ProdutoConfiguracao> getProdutoConfiguracoes() {
+	
+
+	public Set<ProdutoConfiguracao> getProdutoConfiguracoes() {
 		return produtoConfiguracoes;
 	}
 
-	public void setProdutoConfiguracoes(List<ProdutoConfiguracao> produtoConfiguracoes) {
+	public void setProdutoConfiguracoes(Set<ProdutoConfiguracao> produtoConfiguracoes) {
 		this.produtoConfiguracoes = produtoConfiguracoes;
 	}
 
