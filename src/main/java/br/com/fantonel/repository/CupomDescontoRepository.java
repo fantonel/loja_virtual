@@ -15,5 +15,8 @@ public interface CupomDescontoRepository extends JpaRepository<CupomDesconto, UU
 	@Query("SELECT COUNT(*) = 1 FROM CupomDesconto cd WHERE cd.codigo = ?1")
 	boolean existsByCodigo(String codigo);
 	
+	@Query(value = "SELECT cd FROM CupomDesconto cd WHERE cd.id = ?1 AND CURRENT_DATE >= cd.validadeInicial AND (cd.validadeFinal IS NULL OR CURRENT_DATE <= cd.validadeFinal)")
+	Optional<CupomDesconto> buscarCupomValido(UUID id);
+	
 	Optional<CupomDesconto> findByCodigo(String codigo);
 }

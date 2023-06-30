@@ -51,4 +51,8 @@ public class CupomDescontoService {
 	public void deleteById(UUID id) {
 		cupomDescontoRepository.deleteById(id);
 	}
+	
+	public Optional<CupomDesconto> buscarCupomValido(UUID id){
+		return cupomDescontoRepository.buscarCupomValido(id);
+	}
 }
