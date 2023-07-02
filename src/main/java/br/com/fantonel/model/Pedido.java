@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -54,8 +55,8 @@ public class Pedido implements Serializable {
 	@Column(name = "codigorastreio")
 	private String codigoRastreio;
 	
-	@OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-	@JoinColumn(name = "cupomdesconto_id", referencedColumnName = "id")
+	@OneToOne(optional = true, cascade = CascadeType.ALL)
+	@JoinColumn(name = "cupomdesconto_id", referencedColumnName = "id", nullable = true)
 	private CupomDesconto cupomDesconto;
 	
 	@OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
@@ -79,7 +80,10 @@ public class Pedido implements Serializable {
 	private PessoaJuridica transportadora;
 	
 	@OneToMany(mappedBy = "pedido", orphanRemoval = true, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-	private List<PedidoRastreio> pedidoRastreios;
+	private Set<PedidoRastreio> pedidoRastreios;
+	
+	@OneToMany(mappedBy = "pedido", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<PedidoProdutos> pedidoProdutos;
 
 	public Pedido() {
 	}
@@ -196,12 +200,20 @@ public class Pedido implements Serializable {
 		this.transportadora = transportadora;
 	}
 
-	public List<PedidoRastreio> getPedidoRastreios() {
+	public Set<PedidoRastreio> getPedidoRastreios() {
 		return pedidoRastreios;
 	}
 
-	public void setPedidoRastreios(List<PedidoRastreio> pedidoRastreios) {
+	public void setPedidoRastreios(Set<PedidoRastreio> pedidoRastreios) {
 		this.pedidoRastreios = pedidoRastreios;
+	}
+	
+	public List<PedidoProdutos> getPedidoProdutos() {
+		return pedidoProdutos;
+	}
+
+	public void setPedidoProdutos(List<PedidoProdutos> pedidoProdutos) {
+		this.pedidoProdutos = pedidoProdutos;
 	}
 
 	@Override
