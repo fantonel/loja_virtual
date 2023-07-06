@@ -76,26 +76,18 @@ public class PedidoController {
 			pedido.setEnderecoCobranca(enderecoCobranca);
 			pedido.setEnderecoEntrega(enderecoEntrega);
 		}		
-		//Cupom de Desconto
+		pedido.setValor(BigDecimal.ZERO);
 		pedido.setDesconto(BigDecimal.ZERO);
+		pedido.setValorComDescto(BigDecimal.ZERO);
+		pedido.setValorComFrete(BigDecimal.ZERO);
 		if (pedido.getCupomDesconto() != null && pedido.getCupomDesconto().getId() != null) {
 			var cupomDesconto = cupoDescontoService.findById(pedido.getCupomDesconto().getId()).orElseThrow(() -> new LojaVirtualExceptions("Cupom de Desconto Inválido!"));
 			pedido.setCupomDesconto(cupomDesconto);
-			//Se cupom foi setado com valor maior que 0
-			//Ou se aplicará o % sobre o total
-			if (cupomDesconto.getValor() != null && cupomDesconto.getValor().compareTo(BigDecimal.ZERO) == -1)			
-				pedido.setDesconto(cupomDesconto.getValor());
-			else if (cupomDesconto.getPercentual() != null && cupomDesconto.getPercentual().compareTo(BigDecimal.ZERO) == 1) {
-				BigDecimal valor = pedido.getValor();
-				BigDecimal perce = cupomDesconto.getPercentual().divide(new BigDecimal(100.00));
-				BigDecimal desconto = valor.multiply(perce);
-				pedido.setDesconto(desconto);
-			}				
-		}		
-		BigDecimal valorComDesconto   = pedido.getValor().subtract(pedido.getDesconto());
-		pedido.setValorComDescto(valorComDesconto);
-		BigDecimal valorFinalComFrete = valorComDesconto.add(pedido.getFrete());
-		pedido.setValorComFrete(valorFinalComFrete);
+		}
+		//Vinculando o pedido aos itens do pedido.
+		//Importante, ao salvar o pedido, havendo itens, acionará trigger de banco de dados, para atualizar os totais no pedido.
+		if (pedido.getPedidoProdutos() != null)
+			pedido.getPedidoProdutos().stream().forEach(itens -> itens.setPedido(pedido));
 		
 		if (pedido.getId() == null) {
 			pedido.setCodigoRastreio("");
