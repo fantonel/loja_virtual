@@ -119,6 +119,13 @@
 			<artifactId>javax.mail</artifactId>
 			<version>1.6.2</version>
 		</dependency>
+		
+		<!-- Para uso em Integração com Melhor Envio (Logística, Frete), p.e. -->
+		<dependency>
+		    <groupId>com.squareup.okhttp3</groupId>
+		    <artifactId>okhttp</artifactId>
+		    <version>4.10.0</version>
+		</dependency>
 
 	</dependencies>
 	<build>
