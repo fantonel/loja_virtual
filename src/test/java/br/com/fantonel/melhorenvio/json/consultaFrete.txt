@@ -1,0 +1,37 @@
+{
+   "from":{
+      "postal_code":"96020360"
+   },
+   "to":{
+      "postal_code":"01018020"
+   },
+   "products":[
+      {
+         "id":"430d5257-5b38-4ee3-aa77-2009340d0a65",
+         "width":11,
+         "height":17,
+         "length":11,
+         "weight":0.3,
+         "insurance_value":10.1,
+         "quantity":1
+      },
+      {
+         "id":"5507476a-55f4-46a7-9c24-d076bcc43c2a",
+         "width":16,
+         "height":25,
+         "length":11,
+         "weight":0.3,
+         "insurance_value":55.05,
+         "quantity":2
+      },
+      {
+         "id":"e8c5049d-4d8e-4e41-a7ae-bd76c94f2691",
+         "width":22,
+         "height":30,
+         "length":11,
+         "weight":1,
+         "insurance_value":30,
+         "quantity":1
+      }
+   ]
+}
