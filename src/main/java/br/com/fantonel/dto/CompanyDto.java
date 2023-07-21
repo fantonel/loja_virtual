@@ -8,24 +8,32 @@ public class CompanyDto implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@JsonProperty(value = "id")
-	private int id;
+	private Integer id;
 	
 	@JsonProperty(value = "name")
 	private String name;
 	
 	@JsonProperty(value = "picture")
 	private String picture;
+	
+	@JsonProperty(value = "status")
+	private String status;
+	
+	@JsonProperty(value = "use_own_contract")
+	private boolean useOwnContract;
 
 	public CompanyDto() {
 	}
-
-	public int getId() {
+	
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
+
+
 
 	public String getName() {
 		return name;
@@ -43,8 +51,24 @@ public class CompanyDto implements Serializable{
 		this.picture = picture;
 	}
 
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public boolean isUseOwnContract() {
+		return useOwnContract;
+	}
+
+	public void setUseOwnContract(boolean useOwnContract) {
+		this.useOwnContract = useOwnContract;
+	}
+
 	@Override
 	public String toString() {
-		return "CompanyDto [id=" + id + ", name=" + name + ", picture=" + picture + "]";
+		return "CompanyDto [id=" + id + "]";
 	}
 }
