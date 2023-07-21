@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.com.fantonel.dto.MelhorEnvioCompraFreteOrdersDto;
 import br.com.fantonel.dto.MelhorEnvioInsereFreteRequestDto;
 import br.com.fantonel.dto.MelhorEnvioInsereFreteResponseDto;
+import br.com.fantonel.dto.MelhorEnvioPurchaseResponseDto;
 import br.com.fantonel.dto.MelhorEnvioRequestDto;
 import br.com.fantonel.dto.MelhorEnvioResponseDto;
+import br.com.fantonel.dto.PurchaseOrdersDto;
 import br.com.fantonel.util.ApiIntegracao;
 
 @RestController
@@ -49,7 +52,7 @@ public class ConsultaFreteController {
 			MelhorEnvioResponseDto[] dto = mapper.readValue(responseJson, MelhorEnvioResponseDto[].class);
 			return ResponseEntity.status(HttpStatus.OK).body(dto);
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(new MelhorEnvioResponseDto());
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foi possível consultar as informações de frete!");
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -76,6 +79,33 @@ public class ConsultaFreteController {
 			MelhorEnvioInsereFreteResponseDto dto = new ObjectMapper().readValue(responseJson, MelhorEnvioInsereFreteResponseDto.class);
 			return ResponseEntity.status(HttpStatus.OK).body(dto);
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(new MelhorEnvioInsereFreteRequestDto());
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foi possível inserir o frete solicitado!");
+	}
+	
+	@SuppressWarnings("deprecation")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
+	@PostMapping("/comprarfrete")
+	public ResponseEntity<?> comprarFrete(@RequestBody @Valid MelhorEnvioCompraFreteOrdersDto melhorEnvioCompraFreteOrdersDto) throws IOException {
+		String jsonMelhorEnvio = new ObjectMapper().writeValueAsString(melhorEnvioCompraFreteOrdersDto);
+		//
+		okhttp3.OkHttpClient client = new okhttp3.OkHttpClient();
+		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, jsonMelhorEnvio);
+		okhttp3.Request request = new okhttp3.Request.Builder()
+		  .url(ApiIntegracao.MELHORENVIO_SANDBOX_URL_CHECKOUT)
+		  .post(body)
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-Type", "application/json")
+		  .addHeader("Authorization", ApiIntegracao.MELHORENVIO_SANDBOX_TOKKEN)
+		  .addHeader("User-Agent", "seu_email_suporte_tecnico@gmail.com")
+		  .build();
+		//
+		okhttp3.Response response = client.newCall(request).execute();
+		if (response.isSuccessful()) {
+			String responseJson = response.body().string();
+			MelhorEnvioPurchaseResponseDto dto = new ObjectMapper().readValue(responseJson, MelhorEnvioPurchaseResponseDto.class);
+			return ResponseEntity.status(HttpStatus.OK).body(dto);
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foi possível comprar o frete solicitado!");
 	}
 }
