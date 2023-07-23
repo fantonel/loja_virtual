@@ -25,4 +25,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, UUID> {
 	
 	@Query("SELECT ped FROM Pedido ped WHERE ped.pessaJuridica.cnpj = ?1")
 	List<Pedido> findByPessoaJuridicaCnpj(String cnpj);
+	
+	@Query(nativeQuery = true, value =  "SELECT COUNT(*) = 1 FROM pedido ped WHERE transportadora_id = ?1 LIMIT 1")
+	boolean existsPedidoTransportadora(UUID transportadoraID);
 }

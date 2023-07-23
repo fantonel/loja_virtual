@@ -37,6 +37,10 @@ public class PedidoService {
 		return pedidoRepository.existsById(id);
 	}
 	
+	public boolean existsPedidoTransportadora(UUID transportadoraID) {
+		return pedidoRepository.existsPedidoTransportadora(transportadoraID);
+	}
+	
 	public Optional<Pedido> findById(UUID id){
 		return pedidoRepository.findById(id);
 	}
