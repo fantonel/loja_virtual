@@ -77,7 +77,7 @@ public class Pedido implements Serializable {
 	
 	@OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
 	@JoinColumn(name = "transportadora_id", referencedColumnName = "id")
-	private PessoaJuridica transportadora;
+	private Transportadora transportadora;
 	
 	@OneToMany(mappedBy = "pedido", orphanRemoval = true, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
 	private Set<PedidoRastreio> pedidoRastreios;
@@ -190,13 +190,13 @@ public class Pedido implements Serializable {
 
 	public void setEnderecoEntrega(Endereco enderecoEntrega) {
 		this.enderecoEntrega = enderecoEntrega;
-	}
+	}	
 
-	public PessoaJuridica getTransportadora() {
+	public Transportadora getTransportadora() {
 		return transportadora;
 	}
 
-	public void setTransportadora(PessoaJuridica transportadora) {
+	public void setTransportadora(Transportadora transportadora) {
 		this.transportadora = transportadora;
 	}
 
