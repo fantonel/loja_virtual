@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 
@@ -49,6 +51,10 @@ public class PedidoProdutos implements Serializable {
 	@ManyToOne(targetEntity = Produto.class)
 	@JoinColumn(name = "produto_id", referencedColumnName = "id", nullable = false, foreignKey = @ForeignKey(name = "pedidoproduto_fk02", value = ConstraintMode.CONSTRAINT))
 	private Produto produto;
+	
+	@OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+	@JoinColumn(name = "produtoconfiguracao_id", referencedColumnName = "id")
+	private ProdutoConfiguracao produtoConfiguracao;
 	
 	public PedidoProdutos(){}
 
@@ -100,6 +106,14 @@ public class PedidoProdutos implements Serializable {
 		this.produto = produto;
 	}
 	
+	public ProdutoConfiguracao getProdutoConfiguracao() {
+		return produtoConfiguracao;
+	}
+
+	public void setProdutoConfiguracao(ProdutoConfiguracao produtoConfiguracao) {
+		this.produtoConfiguracao = produtoConfiguracao;
+	}
+
 	@Override
 	public String toString() {
 		return "PedidoProdutos [id=" + id + "]";
