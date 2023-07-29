@@ -10,11 +10,14 @@ import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -84,6 +87,16 @@ public class Pedido implements Serializable {
 	
 	@OneToMany(mappedBy = "pedido", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<PedidoProdutos> pedidoProdutos;
+	
+	@OneToOne(mappedBy = "pedido")
+	private MelhorEnvio melhorEnvio;
+	
+	@OneToOne(mappedBy = "pedido")
+	private NotaFiscalVenda notaFiscalVenda;
+	
+	@ManyToOne(targetEntity = Empresa.class)
+	@JoinColumn(name = "empresa_id", nullable = true, foreignKey = @ForeignKey(name = "pedido_fk07", value = ConstraintMode.CONSTRAINT))
+	private Empresa empresa;
 
 	public Pedido() {
 	}
@@ -214,6 +227,30 @@ public class Pedido implements Serializable {
 
 	public void setPedidoProdutos(List<PedidoProdutos> pedidoProdutos) {
 		this.pedidoProdutos = pedidoProdutos;
+	}
+
+	public MelhorEnvio getMelhorEnvio() {
+		return melhorEnvio;
+	}
+
+	public void setMelhorEnvio(MelhorEnvio melhorEnvio) {
+		this.melhorEnvio = melhorEnvio;
+	}
+
+	public NotaFiscalVenda getNotaFiscalVenda() {
+		return notaFiscalVenda;
+	}
+
+	public void setNotaFiscalVenda(NotaFiscalVenda notaFiscalVenda) {
+		this.notaFiscalVenda = notaFiscalVenda;
+	}
+
+	public Empresa getEmpresa() {
+		return empresa;
+	}
+
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
 	}
 
 	@Override
