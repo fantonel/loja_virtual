@@ -2,7 +2,8 @@ package br.com.fantonel.enums;
 
 public enum TipoEndereco {	
 	COBRANCA("Cobrança"),
-	ENTREGA("Entrega");
+	ENTREGA("Entrega"),
+	ENVIO("Envio");
 	
 	private String descricao;
 
