@@ -51,6 +51,9 @@ public class PessoaJuridica implements Serializable {
 	@Column(name = "emailprincipal", nullable = false, length = 120)
 	private String emailPrincipal;
 	
+	@Column(name = "telefoneprincipal", length = 11)
+	private String telefonePrincipal;
+	
 	@Column(name = "excluida", nullable = false)
 	private boolean excluida = false;
 	
@@ -113,7 +116,15 @@ public class PessoaJuridica implements Serializable {
 
 	public void setEmailPrincipal(String emailPrincipal) {
 		this.emailPrincipal = emailPrincipal;
-	}	
+	}
+
+	public String getTelefonePrincipal() {
+		return telefonePrincipal;
+	}
+
+	public void setTelefonePrincipal(String telefonePrincipal) {
+		this.telefonePrincipal = telefonePrincipal;
+	}
 
 	public boolean isExcluida() {
 		return excluida;
@@ -129,6 +140,16 @@ public class PessoaJuridica implements Serializable {
 
 	public void setEnderecos(List<Endereco> enderecos) {
 		this.enderecos = enderecos;
+	}
+	
+	public Endereco getEndereco(String tipoEndereco) {
+		if (enderecos != null && !enderecos.isEmpty()) {
+			for (Endereco endereco : enderecos) {
+				if (endereco.getTipoEndereco().getDescricao().toLowerCase().equals(tipoEndereco.toLowerCase()))
+					return endereco;
+			}			
+		}
+		return null;
 	}
 
 	@Override
