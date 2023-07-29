@@ -17,9 +17,15 @@ public interface EnderecosRepository extends JpaRepository<Endereco, UUID> {
 	@Query("SELECT ender FROM Endereco ender WHERE ender.id = ?1 AND pessoaFisica.id = ?2 AND tipoendereco='ENTREGA' AND ativo=true")
 	Optional<Endereco> findByEnderecoEntregaPessoaFisica(UUID enderecoId, UUID pessoaID);
 	
+	@Query("SELECT ender FROM Endereco ender WHERE pessoaJuridica.id = ?1 AND tipoendereco=?2 AND ativo=true")
+	Optional<Endereco> findByEnderecoEnvioPessoaFisica(UUID pessoaID, String tipoEndereco);
+	
 	@Query("SELECT ender FROM Endereco ender WHERE id = ?1 AND pessoaJuridica.id = ?2 AND tipoendereco='COBRANCA' AND ativo=true")
 	Optional<Endereco> findByEnderecoCobrancaPessoaJuridica(UUID enderecoId, UUID pessoaID);
 	
 	@Query("SELECT ender FROM Endereco ender WHERE id = ?1 AND pessoaJuridica.id = ?2 AND tipoendereco='ENTREGA' AND ativo=true")
 	Optional<Endereco> findByEnderecoEntregaPessoaJuridica(UUID enderecoId, UUID pessoaID);
+	
+	@Query("SELECT ender FROM Endereco ender WHERE pessoaJuridica.id = ?1 AND tipoendereco=?2 AND ativo=true")
+	Optional<Endereco> findByEnderecoEnvioPessoaJuridica(UUID pessoaID, String tipoEndereco);
 }

@@ -33,11 +33,19 @@ public class EnderecoService {
 		return enderecosRepository.findByEnderecoEntregaPessoaFisica(enderecoId, pessoaID);
 	}
 	
+	public Optional<Endereco> findByEnderecoEnvioPessoaFisica(UUID pessoaID, String tipoEndereco) {
+		return enderecosRepository.findByEnderecoEnvioPessoaFisica(pessoaID, tipoEndereco);
+	}
+	
 	public Optional<Endereco> findByEnderecoCobrancaPessoaJuridica(UUID enderecoId, UUID pessoaID) {
 		return enderecosRepository.findByEnderecoCobrancaPessoaJuridica(enderecoId, pessoaID);
 	}
 	
 	public Optional<Endereco> findByEnderecoEntregaPessoaJuridica(UUID enderecoId, UUID pessoaID) {
 		return enderecosRepository.findByEnderecoEntregaPessoaJuridica(enderecoId, pessoaID);
+	}
+	
+	public Optional<Endereco> findByEnderecoEnvioPessoaJuridica(UUID pessoaID, String tipoEndereco) {
+		return enderecosRepository.findByEnderecoEnvioPessoaJuridica(pessoaID, tipoEndereco);
 	}
 }
