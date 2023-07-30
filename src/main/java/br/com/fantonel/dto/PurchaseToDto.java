@@ -57,6 +57,9 @@ public class PurchaseToDto implements Serializable {
 	
 	@JsonProperty(value = "note")
 	private String note;
+	
+	@JsonProperty(value = "economic_activity_code")
+	private String economicActivityCode;
 
 	public PurchaseToDto() {
 	}
@@ -195,6 +198,14 @@ public class PurchaseToDto implements Serializable {
 
 	public void setNote(String note) {
 		this.note = note;
+	}
+
+	public String getEconomicActivityCode() {
+		return economicActivityCode;
+	}
+
+	public void setEconomicActivityCode(String economicActivityCode) {
+		this.economicActivityCode = economicActivityCode;
 	}
 
 	@Override

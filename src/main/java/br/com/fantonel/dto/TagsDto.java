@@ -13,6 +13,11 @@ public class TagsDto implements Serializable {
 	@JsonProperty(value = "url")
 	private String url;
 
+	public TagsDto(String tag, String url) {
+		this.tag = tag;
+		this.url = url;
+	}
+	
 	public TagsDto() {
 	}
 

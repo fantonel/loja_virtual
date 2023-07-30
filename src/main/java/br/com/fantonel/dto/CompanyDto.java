@@ -21,6 +21,15 @@ public class CompanyDto implements Serializable{
 	
 	@JsonProperty(value = "use_own_contract")
 	private boolean useOwnContract;
+	
+	@JsonProperty(value = "has_grouped_volumes")
+	private boolean hasGroupedVolumes;
+	
+	@JsonProperty(value = "tracking_link")
+	private String trackingLink;
+	
+	@JsonProperty(value = "batch_size")
+	private int batchSize;
 
 	public CompanyDto() {
 	}
@@ -65,6 +74,30 @@ public class CompanyDto implements Serializable{
 
 	public void setUseOwnContract(boolean useOwnContract) {
 		this.useOwnContract = useOwnContract;
+	}
+
+	public boolean isHasGroupedVolumes() {
+		return hasGroupedVolumes;
+	}
+
+	public void setHasGroupedVolumes(boolean hasGroupedVolumes) {
+		this.hasGroupedVolumes = hasGroupedVolumes;
+	}
+
+	public String getTrackingLink() {
+		return trackingLink;
+	}
+
+	public void setTrackingLink(String trackingLink) {
+		this.trackingLink = trackingLink;
+	}
+
+	public int getBatchSize() {
+		return batchSize;
+	}
+
+	public void setBatchSize(int batchSize) {
+		this.batchSize = batchSize;
 	}
 
 	@Override

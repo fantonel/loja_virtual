@@ -9,6 +9,11 @@ public class ConsultaFreteDestinoDto implements Serializable {
 
 	public ConsultaFreteDestinoDto() {
 	}
+	
+	public ConsultaFreteDestinoDto(String postal_code) {
+		this.postal_code = postal_code;
+	}
+
 
 	public String getPostal_code() {
 		return postal_code;

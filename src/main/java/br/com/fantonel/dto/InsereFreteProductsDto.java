@@ -12,7 +12,7 @@ public class InsereFreteProductsDto implements Serializable {
 	private String name;
 	
 	@JsonProperty(value = "quantity")
-	private int quantity;
+	private BigDecimal quantity;
 	
 	@JsonProperty(value = "unitary_value")
 	private BigDecimal unitaryValue;
@@ -31,11 +31,11 @@ public class InsereFreteProductsDto implements Serializable {
 		this.name = name;
 	}
 
-	public int getQuantity() {
+	public BigDecimal getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(int quantity) {
+	public void setQuantity(BigDecimal quantity) {
 		this.quantity = quantity;
 	}
 
