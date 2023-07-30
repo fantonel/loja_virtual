@@ -1,5 +1,6 @@
 package br.com.fantonel.controller;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,10 +21,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.fantonel.dto.InsereFreteFromDto;
+import br.com.fantonel.dto.InsereFreteOptionsDto;
+import br.com.fantonel.dto.InsereFreteProductsDto;
+import br.com.fantonel.dto.InsereFreteToDto;
+import br.com.fantonel.dto.InvoiceDto;
+import br.com.fantonel.dto.MelhorEnvioInsereFreteRequestDto;
+import br.com.fantonel.dto.MelhorEnvioInsereFreteResponseDto;
+import br.com.fantonel.dto.TagsDto;
+import br.com.fantonel.dto.VolumesDto;
 import br.com.fantonel.excepts.LojaVirtualExceptions;
+import br.com.fantonel.model.MelhorEnvio;
 import br.com.fantonel.model.Pedido;
+import br.com.fantonel.model.PedidoProdutos;
+import br.com.fantonel.model.Produto;
+import br.com.fantonel.model.ProdutoConfiguracao;
 import br.com.fantonel.service.CupomDescontoService;
 import br.com.fantonel.service.EnderecoService;
+import br.com.fantonel.service.MelhorEnvioService;
 import br.com.fantonel.service.PedidoService;
 import br.com.fantonel.service.PessoaFisicaService;
 import br.com.fantonel.service.PessoaJuridicaService;
@@ -41,6 +56,12 @@ public class PedidoController {
 	private EnderecoService enderecoService;
 	@Autowired	
 	private CupomDescontoService cupoDescontoService;
+	@Autowired
+	private MelhorEnvioService melhorEnvioService;
+	
+	@Autowired	
+	private FreteController freteController;
+	
 
 	public PedidoController() {
 	}
@@ -59,7 +80,7 @@ public class PedidoController {
 		}else if (pedido.getPessaJuridica() != null && pedido.getPessaJuridica().getId() != null) {
 			var pessoaJuridica = pessoaJuridicaService.findById(pedido.getPessaJuridica().getId()).orElseThrow(() -> new LojaVirtualExceptions("A empresa a ser vinculada ao pedido, não foi encontrada!"));
 			pedido.setPessaJuridica(pessoaJuridica);
-		}
+		}					
 		//Endereço de Entrega / Cobrança
 		if (pedido.getEnderecoCobranca() == null || pedido.getEnderecoEntrega() == null)
 			throw new LojaVirtualExceptions("Informe o endereço de Entrega e de Cobrança!");
@@ -144,5 +165,115 @@ public class PedidoController {
 			return ResponseEntity.status(HttpStatus.OK).body(pedidoService.findByPessoaJuridica(cnpj));
 		else
 			throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND, "Nenhum pedido foi encontrado!");		
+	}
+	
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
+	@PostMapping("/comprarfrete/{pedidoID}")
+	public ResponseEntity<?> pedidoComprarFrete(@PathVariable UUID pedidoID) throws LojaVirtualExceptions, IllegalAccessException, InvocationTargetException, IOException{
+		var pedido = pedidoService.findById(pedidoID).orElseThrow(() -> new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"O pedido "+pedidoID+" não foi encontrado!"));
+		if (pedido.getPessaJuridica() == null || pedido.getPessaJuridica().getId() == null)
+			throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"Verifique a empresa vinculada ao pedido "+pedidoID+"!");
+		if (pedido.getPedidoProdutos() == null || pedido.getPedidoProdutos().isEmpty())
+			throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"Não foram encontrados produtos, vinculados ao pedido "+pedidoID+". Verifique!");
+		if (pedido.getMelhorEnvio() == null || pedido.getMelhorEnvio().getMelhorEnvioFreteService() == null)
+			throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"Informe a opção de frete desejada, para o envio dos produtos.!");
+		if(pedido.getNotaFiscalVenda() == null || pedido.getNotaFiscalVenda().getId() == null)
+			throw new LojaVirtualExceptions("A Nota Fiscal de Venda vinculada ao Pedido, não foi encontrada. Verifique!");
+		//
+		var empresa = pedido.getEmpresa();
+		if (empresa.getPessoaJuridica().getEnderecos() == null)
+			throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"O endereço da Empresa vinculada ao Pedido, está incompleto. Verifique!");
+		var enderecoEmpresa = empresa.getPessoaJuridica().getEndereco("Envio"); 
+		if (enderecoEmpresa == null)
+			throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"O endereço de envio da Empresa vinculada ao Pedido, não foi localizado. Verifique!");		
+		var cliente = pessoaFisicaService.findById(pedido.getPessoaFisica().getId()).orElseThrow(() -> new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"O cliente do produto não foi encontrado. Verifique!"));
+		var enderecoCliente = cliente.getEndereco("Entrega");
+		if (enderecoCliente == null)
+			throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"O endereço de entrega da Cliente vinculado ao Pedido, não foi localizado. Verifique!");
+		//
+		MelhorEnvioInsereFreteRequestDto meFreteDto = new MelhorEnvioInsereFreteRequestDto();
+		meFreteDto.setService(pedido.getMelhorEnvio().getMelhorEnvioFreteService());
+		meFreteDto.setAgency(pedido.getMelhorEnvio().getMelhorEnvioFreteAgency());
+		InsereFreteFromDto remetente = new InsereFreteFromDto();
+		remetente.setName(empresa.getPessoaJuridica().getRazaoSocial());
+		remetente.setPhone(empresa.getPessoaJuridica().getTelefonePrincipal());
+		remetente.setEmail(empresa.getPessoaJuridica().getEmailPrincipal());
+		remetente.setDocument("");
+		remetente.setCompanyDocument(empresa.getPessoaJuridica().getCnpj());
+		remetente.setStateRegister(empresa.getPessoaJuridica().getIe());		
+		remetente.setAddress(enderecoEmpresa.getTipoLogradouro()+" "+enderecoEmpresa.getLogradouro());
+		remetente.setNumber(enderecoEmpresa.getNumero());
+		remetente.setDistrict(enderecoEmpresa.getBairro());
+		remetente.setCity(enderecoEmpresa.getLocalidade());
+		remetente.setCountryId("BR");
+		remetente.setPostalCode(enderecoEmpresa.getCep());
+		remetente.setNote("");
+		meFreteDto.setFrom(remetente);
+		//
+		InsereFreteToDto destinatario = new InsereFreteToDto();
+		destinatario.setName(cliente.getNome());
+		destinatario.setPhone(cliente.getTelefonePrincipal());
+		destinatario.setEmail(cliente.getEmail());
+		destinatario.setDocument(cliente.getCpf());
+		destinatario.setCompanyDocument("");
+		destinatario.setStateRegister("");
+		destinatario.setAddress(enderecoCliente.getTipoLogradouro()+" "+enderecoCliente.getLogradouro());
+		destinatario.setNumber(enderecoCliente.getNumero());
+		destinatario.setDistrict(enderecoCliente.getBairro());
+		destinatario.setCity(enderecoCliente.getLocalidade());
+		destinatario.setStateAbbr(enderecoCliente.getUf());
+		destinatario.setCountryId("BR");
+		destinatario.setPostalCode(enderecoCliente.getCep());
+		destinatario.setNote("");
+		meFreteDto.setTo(destinatario);
+		//
+		int index = 0;
+		InsereFreteProductsDto[] products = new InsereFreteProductsDto[pedido.getPedidoProdutos().size()];
+		VolumesDto[] volumes = new VolumesDto[pedido.getPedidoProdutos().size()];
+		for (PedidoProdutos pedidoProduto : pedido.getPedidoProdutos()) {
+			Produto produto = pedidoProduto.getProduto();			
+			//
+			InsereFreteProductsDto product = new InsereFreteProductsDto();
+			product.setName(produto.getNome());
+			product.setQuantity(pedidoProduto.getQtde());
+			product.setUnitaryValue(pedidoProduto.getValorFinal());
+			products[index] = product;			
+			//
+			ProdutoConfiguracao configuracao = pedidoProduto.getProdutoConfiguracao();
+			VolumesDto volume = new VolumesDto();
+			volume.setHeight(BigDecimal.valueOf(configuracao.getAltura()));			
+			volume.setWidth(BigDecimal.valueOf(configuracao.getLargura()));
+			volume.setLength(BigDecimal.valueOf(configuracao.getProfundidade()));
+			volume.setWeight(BigDecimal.valueOf(configuracao.getPeso()));
+			volumes[index] = volume;
+			index++;
+		}
+		meFreteDto.setProducts(products);
+		meFreteDto.setVolumes(volumes);
+		//		
+		InsereFreteOptionsDto options = new InsereFreteOptionsDto();
+		options.setInsuranceValue(pedido.getValorComFrete());
+		options.setReceipt(false);
+		options.setOwnHand(false);
+		options.setReverse(false);
+		options.setNonCommercial(false);
+		options.setPlataform(pedido.getEmpresa().getPessoaJuridica().getNomeFantasia());
+		InvoiceDto invoice = new InvoiceDto(pedido.getNotaFiscalVenda().getNumero());
+		options.setInvoice(invoice);
+		TagsDto[] tags = new TagsDto[]{new TagsDto(pedido.getId()+"", null)};
+		options.setTags(tags);
+		meFreteDto.setOptions(options);
+		//
+		ResponseEntity<?> response = freteController.inserirFreteProduto(meFreteDto);
+		if (response.getStatusCode() == HttpStatus.OK) {
+			MelhorEnvioInsereFreteResponseDto responseDto = (MelhorEnvioInsereFreteResponseDto) response.getBody();
+			MelhorEnvio me = pedido.getMelhorEnvio();
+			me.setMelhorEnvioInserirFreteId(responseDto.getId());
+			melhorEnvioService.save(me);
+			return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+		}else {
+			System.out.println(response.toString());
+			throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"Ocorreu um problema ao inserir o Frete para o Pedido. Verifique!");
+		}
 	}
 }

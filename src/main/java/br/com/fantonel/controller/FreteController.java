@@ -20,13 +20,13 @@ import br.com.fantonel.dto.MelhorEnvioInsereFreteResponseDto;
 import br.com.fantonel.dto.MelhorEnvioPurchaseResponseDto;
 import br.com.fantonel.dto.MelhorEnvioRequestDto;
 import br.com.fantonel.dto.MelhorEnvioResponseDto;
-import br.com.fantonel.dto.PurchaseOrdersDto;
 import br.com.fantonel.util.ApiIntegracao;
 
 @RestController
-@RequestMapping("api/v1/consultafrete")
-public class ConsultaFreteController {
-	public ConsultaFreteController() {
+@RequestMapping("api/v1/frete")
+public class FreteController {
+	
+	public FreteController() {
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -79,6 +79,7 @@ public class ConsultaFreteController {
 			MelhorEnvioInsereFreteResponseDto dto = new ObjectMapper().readValue(responseJson, MelhorEnvioInsereFreteResponseDto.class);
 			return ResponseEntity.status(HttpStatus.OK).body(dto);
 		}
+		System.out.println(response.body().string());
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foi possível inserir o frete solicitado!");
 	}
 	
@@ -103,9 +104,11 @@ public class ConsultaFreteController {
 		okhttp3.Response response = client.newCall(request).execute();
 		if (response.isSuccessful()) {
 			String responseJson = response.body().string();
+			System.out.println(responseJson);
 			MelhorEnvioPurchaseResponseDto dto = new ObjectMapper().readValue(responseJson, MelhorEnvioPurchaseResponseDto.class);
 			return ResponseEntity.status(HttpStatus.OK).body(dto);
 		}
+		System.out.println(response.body().string());
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foi possível comprar o frete solicitado!");
 	}
 }
