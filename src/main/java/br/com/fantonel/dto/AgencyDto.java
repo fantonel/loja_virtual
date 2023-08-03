@@ -10,6 +10,15 @@ public class AgencyDto implements Serializable {
 	@JsonProperty(value = "id")
     private Integer id;
 	
+	@JsonProperty(value = "ownership")
+	private String ownership;
+	
+	@JsonProperty(value = "type")
+	private String type;
+	
+	@JsonProperty(value = "is_ponto")
+    private Integer isPonto;
+	
 	@JsonProperty(value = "company_id")
     private Integer companyId;
 	
@@ -45,6 +54,9 @@ public class AgencyDto implements Serializable {
 	
 	@JsonProperty(value = "phone")
 	private PhoneDto phone;
+	
+	@JsonProperty(value = "companies")
+	private CompaniesDto[] companies;
 
 	public AgencyDto() {
 	}
@@ -55,6 +67,30 @@ public class AgencyDto implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getOwnership() {
+		return ownership;
+	}
+
+	public void setOwnership(String ownership) {
+		this.ownership = ownership;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public Integer getIsPonto() {
+		return isPonto;
+	}
+
+	public void setIsPonto(Integer isPonto) {
+		this.isPonto = isPonto;
 	}
 
 	public Integer getCompanyId() {
@@ -151,6 +187,14 @@ public class AgencyDto implements Serializable {
 
 	public void setPhone(PhoneDto phone) {
 		this.phone = phone;
+	}
+
+	public CompaniesDto[] getCompanies() {
+		return companies;
+	}
+
+	public void setCompanies(CompaniesDto[] companies) {
+		this.companies = companies;
 	}
 
 	@Override

@@ -21,6 +21,17 @@ public class MelhorEnvioCompraFreteOrdersDto implements Serializable {
 	public void setOrders(CompraFreteOrdersDto[] orders) {
 		this.orders = orders;
 	}
+	
+	public void setOrder(String[] ordersId) {
+		if (ordersId != null && ordersId.length > 0) {
+			orders = new CompraFreteOrdersDto[ordersId.length];
+			int position = 0;
+			for (String orderId : ordersId) {
+				orders[position] = new CompraFreteOrdersDto(orderId);
+				position++;				
+			}			
+		}
+	}
 
 	@Override
 	public String toString() {

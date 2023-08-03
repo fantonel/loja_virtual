@@ -12,6 +12,10 @@ public class CompraFreteOrdersDto implements Serializable {
 
 	public CompraFreteOrdersDto() {
 	}
+	
+	public CompraFreteOrdersDto(String orderId) {
+		this.orderId = orderId;
+	}
 
 	public String getOrderId() {
 		return orderId;
