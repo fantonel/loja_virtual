@@ -26,8 +26,10 @@ import br.com.fantonel.dto.InsereFreteOptionsDto;
 import br.com.fantonel.dto.InsereFreteProductsDto;
 import br.com.fantonel.dto.InsereFreteToDto;
 import br.com.fantonel.dto.InvoiceDto;
+import br.com.fantonel.dto.MelhorEnvioCompraFreteOrdersDto;
 import br.com.fantonel.dto.MelhorEnvioInsereFreteRequestDto;
 import br.com.fantonel.dto.MelhorEnvioInsereFreteResponseDto;
+import br.com.fantonel.dto.MelhorEnvioPurchaseResponseDto;
 import br.com.fantonel.dto.TagsDto;
 import br.com.fantonel.dto.VolumesDto;
 import br.com.fantonel.excepts.LojaVirtualExceptions;
@@ -60,8 +62,7 @@ public class PedidoController {
 	private MelhorEnvioService melhorEnvioService;
 	
 	@Autowired	
-	private FreteController freteController;
-	
+	private FreteController freteController;	
 
 	public PedidoController() {
 	}
@@ -270,6 +271,17 @@ public class PedidoController {
 			MelhorEnvio me = pedido.getMelhorEnvio();
 			me.setMelhorEnvioInserirFreteId(responseDto.getId());
 			melhorEnvioService.save(me);
+			//			
+			MelhorEnvioCompraFreteOrdersDto requestOrders = new MelhorEnvioCompraFreteOrdersDto();
+			requestOrders.setOrder(new String[]{responseDto.getId()});
+			ResponseEntity<?> responseCompraFrete = freteController.comprarFrete(requestOrders);
+			if (responseCompraFrete.getStatusCode() == HttpStatus.OK) {
+				MelhorEnvioPurchaseResponseDto purchaseDto = (MelhorEnvioPurchaseResponseDto) responseCompraFrete.getBody();
+				me.setMelhorEnvioComprarFreteId(purchaseDto.getPurchase().getId());
+				melhorEnvioService.save(me);
+			}else {
+				throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"Ocorreu um problema ao contratar o Frete para o Pedido. Verifique!");				
+			}
 			return ResponseEntity.status(HttpStatus.OK).body(responseDto);
 		}else {
 			System.out.println(response.toString());

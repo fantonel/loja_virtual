@@ -104,11 +104,9 @@ public class FreteController {
 		okhttp3.Response response = client.newCall(request).execute();
 		if (response.isSuccessful()) {
 			String responseJson = response.body().string();
-			System.out.println(responseJson);
 			MelhorEnvioPurchaseResponseDto dto = new ObjectMapper().readValue(responseJson, MelhorEnvioPurchaseResponseDto.class);
 			return ResponseEntity.status(HttpStatus.OK).body(dto);
 		}
-		System.out.println(response.body().string());
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foi possível comprar o frete solicitado!");
 	}
 }
