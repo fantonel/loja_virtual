@@ -21,6 +21,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import br.com.fantonel.dto.EtiquetaDto;
+import br.com.fantonel.dto.EtiquetarModeDto;
 import br.com.fantonel.dto.InsereFreteFromDto;
 import br.com.fantonel.dto.InsereFreteOptionsDto;
 import br.com.fantonel.dto.InsereFreteProductsDto;
@@ -267,25 +272,49 @@ public class PedidoController {
 		//
 		ResponseEntity<?> response = freteController.inserirFreteProduto(meFreteDto);
 		if (response.getStatusCode() == HttpStatus.OK) {
+			//Guardo o id gerado, a partir do cadastro do frete escolhido
 			MelhorEnvioInsereFreteResponseDto responseDto = (MelhorEnvioInsereFreteResponseDto) response.getBody();
 			MelhorEnvio me = pedido.getMelhorEnvio();
 			me.setMelhorEnvioInserirFreteId(responseDto.getId());
 			melhorEnvioService.save(me);
-			//			
+			//Realizo a compra do frete escolhido
 			MelhorEnvioCompraFreteOrdersDto requestOrders = new MelhorEnvioCompraFreteOrdersDto();
 			requestOrders.setOrder(new String[]{responseDto.getId()});
 			ResponseEntity<?> responseCompraFrete = freteController.comprarFrete(requestOrders);
 			if (responseCompraFrete.getStatusCode() == HttpStatus.OK) {
 				MelhorEnvioPurchaseResponseDto purchaseDto = (MelhorEnvioPurchaseResponseDto) responseCompraFrete.getBody();
 				me.setMelhorEnvioComprarFreteId(purchaseDto.getPurchase().getId());
-				melhorEnvioService.save(me);
+				melhorEnvioService.save(me);				
 			}else {
+				System.err.println(responseCompraFrete);
 				throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"Ocorreu um problema ao contratar o Frete para o Pedido. Verifique!");				
 			}
 			return ResponseEntity.status(HttpStatus.OK).body(responseDto);
 		}else {
-			System.out.println(response.toString());
+			System.err.println(response.toString());
 			throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"Ocorreu um problema ao inserir o Frete para o Pedido. Verifique!");
 		}
+	}
+	
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
+	@PostMapping("/geraretiqueta/{pedidoID}")
+	public ResponseEntity<?> gerarEtiqueta(@PathVariable UUID pedidoID) throws LojaVirtualExceptions, IllegalAccessException, InvocationTargetException, IOException{
+		var pedido = pedidoService.findById(pedidoID).orElseThrow(() -> new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"O pedido "+pedidoID+" não foi encontrado!"));
+		MelhorEnvio me = pedido.getMelhorEnvio();		
+		//Gero a(s) etiqueta(s) relacionadas relacionadas ao frete comprado
+		EtiquetaDto etiqueta = new EtiquetaDto(new String[]{me.getMelhorEnvioInserirFreteId()});
+		ResponseEntity<?> responseGerarEtiqueta = freteController.gerarEtiqueta(etiqueta);
+		if (responseGerarEtiqueta.getStatusCode() == HttpStatus.OK) {
+			EtiquetarModeDto etiquetaMode = new EtiquetarModeDto(new String[]{me.getMelhorEnvioInserirFreteId()});
+			freteController.obterurletiqueta(etiquetaMode);
+			ResponseEntity<?> responseUrlEtiqueta = freteController.obterurletiqueta(etiquetaMode);
+			if (responseUrlEtiqueta.getStatusCode() == HttpStatus.OK) {
+				JsonNode jsonNode = new ObjectMapper().readTree(responseUrlEtiqueta.getBody().toString());
+				me.setMelhorEnvioUrletiqueta(jsonNode.get("url").textValue().replaceAll("\\\\", ""));
+				melhorEnvioService.save(me);
+				return ResponseEntity.status(HttpStatus.OK).body(responseUrlEtiqueta.getBody().toString());
+			}
+		}		
+		throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"Ocorreu um problema ao gerar a(s) etiqueta(s) para envio dos produto(s). Verifique!");
 	}
 }
