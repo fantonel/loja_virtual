@@ -1,0 +1,1 @@
+ALTER TABLE IF EXISTS melhorenvio ADD COLUMN melhorenvio_codigorastreio CHARACTER VARYING(20);
