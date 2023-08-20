@@ -61,6 +61,9 @@ public class MelhorEnvio implements Serializable {
 	@Column(name = "melhorenvio_urletiqueta")
 	private String melhorEnvioUrletiqueta;
 	
+	@Column(name = "melhorenvio_codigorastreio")
+	private String melhorEnvioCodigoRastreio;	
+	
 	@OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
 	@JoinColumn(name = "pedido_id", referencedColumnName = "id")
 	private Pedido pedido;
@@ -166,6 +169,14 @@ public class MelhorEnvio implements Serializable {
 
 	public void setMelhorEnvioUrletiqueta(String melhorEnvioUrletiqueta) {
 		this.melhorEnvioUrletiqueta = melhorEnvioUrletiqueta;
+	}
+
+	public String getMelhorEnvioCodigoRastreio() {
+		return melhorEnvioCodigoRastreio;
+	}
+
+	public void setMelhorEnvioCodigoRastreio(String melhorEnvioCodigoRastreio) {
+		this.melhorEnvioCodigoRastreio = melhorEnvioCodigoRastreio;
 	}
 
 	public Pedido getPedido() {
