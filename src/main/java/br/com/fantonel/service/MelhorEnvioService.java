@@ -34,7 +34,10 @@ public class MelhorEnvioService {
 	}
 	
 	public Optional<MelhorEnvio> buscarPorFreteInserido(String melhorEnvioInsereFreteId){
-		return melhorEnvioRepository.buscarPorFreteInserido(melhorEnvioInsereFreteId);
-		
+		return melhorEnvioRepository.buscarPorFreteInserido(melhorEnvioInsereFreteId);		
+	}
+	
+	public Optional<MelhorEnvio> buscarPorPedido(UUID pedidoID){
+		return melhorEnvioRepository.buscarPorPedido(pedidoID);		
 	}
 }

@@ -13,4 +13,7 @@ import br.com.fantonel.model.MelhorEnvio;
 public interface MelhorEnvioRepository extends JpaRepository<MelhorEnvio, UUID> {
 	@Query(nativeQuery = true, value = "SELECT * FROM melhorenvio me WHERE me.melhorenvio_inserirfreteid = ?")
 	Optional<MelhorEnvio> buscarPorFreteInserido(String melhorEnvioInsereFreteId);
+	
+	@Query(nativeQuery = true, value = "SELECT * FROM melhorenvio me WHERE me.pedido_id = ?")
+	Optional<MelhorEnvio> buscarPorPedido(UUID pedidoID);
 }
