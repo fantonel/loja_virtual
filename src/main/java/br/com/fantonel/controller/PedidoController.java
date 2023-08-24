@@ -35,6 +35,7 @@ import br.com.fantonel.dto.MelhorEnvioCompraFreteOrdersDto;
 import br.com.fantonel.dto.MelhorEnvioInsereFreteRequestDto;
 import br.com.fantonel.dto.MelhorEnvioInsereFreteResponseDto;
 import br.com.fantonel.dto.MelhorEnvioPurchaseResponseDto;
+import br.com.fantonel.dto.MelhorEnvioTracking;
 import br.com.fantonel.dto.TagsDto;
 import br.com.fantonel.dto.VolumesDto;
 import br.com.fantonel.excepts.LojaVirtualExceptions;
@@ -316,5 +317,28 @@ public class PedidoController {
 			}
 		}		
 		throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"Ocorreu um problema ao gerar a(s) etiqueta(s) para envio dos produto(s). Verifique!");
+	}
+	
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
+	@PostMapping("/rastrearpedido/{pedidoID}")
+	public ResponseEntity<?> rastrearPedido(@PathVariable UUID pedidoID) throws LojaVirtualExceptions, IllegalAccessException, InvocationTargetException, IOException{
+		var pedido = pedidoService.findById(pedidoID).orElseThrow(() -> new LojaVirtualExceptions(HttpStatus.NOT_FOUND,"O pedido "+pedidoID+" não foi encontrado, para ser rastreado!"));
+		//Obtenho o id da ordem de compra do pedido, para fazer o rastreio
+		MelhorEnvio me = pedido.getMelhorEnvio();
+		EtiquetaDto etiqueta = new EtiquetaDto(new String[]{me.getMelhorEnvioInserirFreteId()});
+		//
+		ResponseEntity<?> responseRastreio = freteController.rastrearPedido(etiqueta);
+		if (responseRastreio.getStatusCode() == HttpStatus.OK) {
+			MelhorEnvioTracking meTracking = (MelhorEnvioTracking) responseRastreio.getBody();
+			//Armazeno o código de rastreio, para usar na URL do MelhorRastreio	
+			//https://app.melhorrastreio.com.br/app/melhorenvio/{tracking}
+			var melhorEnvio = melhorEnvioService.buscarPorPedido(pedidoID).orElse(null);
+			if (melhorEnvio != null) {
+				melhorEnvio.setMelhorEnvioCodigoRastreio(meTracking.getTracking());
+				melhorEnvioService.save(melhorEnvio);
+			}			
+			return ResponseEntity.status(HttpStatus.OK).body(meTracking);
+		}	
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("O rastreio do pedido "+pedidoID+" ainda não está disponível. Tente novamente mais tarde!");
 	}
 }

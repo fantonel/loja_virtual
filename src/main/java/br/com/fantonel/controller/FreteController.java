@@ -27,6 +27,7 @@ import br.com.fantonel.dto.MelhorEnvioInsereFreteResponseDto;
 import br.com.fantonel.dto.MelhorEnvioPurchaseResponseDto;
 import br.com.fantonel.dto.MelhorEnvioRequestDto;
 import br.com.fantonel.dto.MelhorEnvioResponseDto;
+import br.com.fantonel.dto.MelhorEnvioTracking;
 import br.com.fantonel.excepts.LojaVirtualExceptions;
 import br.com.fantonel.util.ApiIntegracao;
 
@@ -118,7 +119,7 @@ public class FreteController {
 			return ResponseEntity.status(HttpStatus.OK).body(dto);
 		}
 		System.err.println(responseJson);
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foi possível comprar o frete solicitado!");
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("As informações de rastreamento ainda não estão disponíveis. Tente novamente mais tarde!");
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -225,7 +226,7 @@ public class FreteController {
 	@SuppressWarnings("deprecation")
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 	@PostMapping("/cancelaretiqueta")
-	public ResponseEntity<?> cancelaretiqueta(@RequestBody @Valid CancelOrderDto orders) throws IOException, LojaVirtualExceptions {		
+	public ResponseEntity<?> cancelaretiqueta(@RequestBody @Valid CancelOrderDto orders) throws IOException, LojaVirtualExceptions {
 		//Verifico, primeiramente, se a etiqueta pode ser cancelada.
 		EtiquetarModeDto etiqueta = new EtiquetarModeDto();
 		etiqueta.setOrders(new String[]{orders.getOrders().getId()});
@@ -280,5 +281,51 @@ public class FreteController {
 			return ResponseEntity.status(HttpStatus.OK).body(responseJson);			
 		}
 		throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND, "Transportadora "+companyId+" não foi encontrada!");
+	}
+	
+	@SuppressWarnings("deprecation")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+	@PostMapping("/rastreiopedido")
+	public ResponseEntity<?> rastrearPedido(@RequestBody @Valid EtiquetaDto orders) throws IOException, LojaVirtualExceptions {
+		String jsonMelhorEnvio = new ObjectMapper().writeValueAsString(orders);
+		//
+		okhttp3.OkHttpClient client = new okhttp3.OkHttpClient();
+		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+		//okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, "{\"orders\":[\"99f14820-a46f-489d-b056-0acafabed574\"]}");
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, jsonMelhorEnvio);
+		okhttp3.Request request = new okhttp3.Request.Builder()
+		  //.url("https://sandbox.melhorenvio.com.br/api/v2/me/shipment/tracking")
+ 		  .url(ApiIntegracao.MELHORENVIO_SANDBOX_URL_TAG_TRACKING)
+		  .post(body)
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-type", "application/json")
+		  .addHeader("Authorization", ApiIntegracao.MELHORENVIO_SANDBOX_TOKKEN)
+		  .addHeader("User-Agent", "seu_email_suporte_tecnico@gmail.com")
+		  .build();
+		okhttp3.Response response = client.newCall(request).execute();
+		if (response.isSuccessful()) {
+			String responseStr = response.body().string();
+			MelhorEnvioTracking meTracking = new MelhorEnvioTracking();
+			JsonNode root = new ObjectMapper().readTree(responseStr);
+			Iterator<JsonNode> it = root.iterator();
+			while (it.hasNext()) {
+				JsonNode node = it.next();
+				meTracking.setId(node.get("id").textValue());
+				meTracking.setProtocol(node.get("protocol").textValue());
+				meTracking.setStatus(node.get("status").textValue());
+				meTracking.setTracking(node.get("tracking").textValue());
+				meTracking.setMelhorEnvioTracking(node.get("melhorenvio_tracking").textValue());
+				meTracking.setCreatedAt(node.get("created_at").textValue());
+				meTracking.setPaidAt(node.get("paid_at").textValue());
+				meTracking.setGeneratedAt(node.get("generated_at").textValue());
+				meTracking.setPostedAt(node.get("posted_at").textValue());
+				meTracking.setDeliveredAt(node.get("delivered_at").textValue());
+				meTracking.setCanceledAt(node.get("canceled_at").textValue());
+				meTracking.setExpiredAt(node.get("expired_at").textValue());
+			}
+			return ResponseEntity.status(HttpStatus.OK).body(meTracking);
+		}
+		System.err.println(response.body().string());
+		throw new LojaVirtualExceptions(HttpStatus.NOT_FOUND, "Ocorreu um problema, ao rastrear o pedido! Tente novamente em alguns minutos");
 	}
 }
