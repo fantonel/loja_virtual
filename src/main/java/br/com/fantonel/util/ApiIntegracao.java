@@ -25,6 +25,8 @@ public class ApiIntegracao {
 	
 	//Consultar transportadora no melhor envio.
 	public static final String MELHORENVIO_SANDBOX_COMPANIES = "https://sandbox.melhorenvio.com.br/api/v2/me/shipment/companies";
+	
+	public static final String HOST_API_PGTO = "https://api.juno.com.br/";
 
 	public ApiIntegracao() {
 	}
