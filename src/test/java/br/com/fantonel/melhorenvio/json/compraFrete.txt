@@ -1,4 +1,11 @@
-/*Retorno da compra do frete*/
+//REQUEST
+{
+   "orders":[
+      {"order_id" : "f0622f62-843e-46e9-aead-ad2565fbab46"}
+   ]
+}
+
+//RESPONSE
 {
    "purchase":{
       "id":"67798373-b165-4ac8-8933-b5cd3fbd3dc1",

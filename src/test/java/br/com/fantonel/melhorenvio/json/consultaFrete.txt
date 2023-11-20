@@ -35,3 +35,301 @@
       }
    ]
 }
+
+//RESPONSE
+[
+    {
+        "id": "1",
+        "name": "PAC",
+        "error": null,
+        "price": "80.71",
+        "custom_price": "80.71",
+        "discount": "7.90",
+        "currency": "R$",
+        "delivery_time": "13",
+        "delivery_range": {
+            "min": "12",
+            "max": "13"
+        },
+        "custom_delivery_time": "13",
+        "custom_delivery_range": {
+            "min": "12",
+            "max": "13"
+        },
+        "packages": [
+            {
+                "price": "80.71",
+                "discount": "7.90",
+                "format": "box",
+                "weight": "1.90",
+                "insurance_value": "150.20",
+                "dimensions": {
+                    "height": "21",
+                    "width": "30",
+                    "length": "30"
+                },
+                "products": [
+                    {
+                        "id": "430d5257-5b38-4ee3-aa77-2009340d0a65",
+                        "name": null,
+                        "quantity": "1",
+                        "unitary_value": null,
+                        "weight": null
+                    },
+                    {
+                        "id": "5507476a-55f4-46a7-9c24-d076bcc43c2a",
+                        "name": null,
+                        "quantity": "2",
+                        "unitary_value": null,
+                        "weight": null
+                    },
+                    {
+                        "id": "e8c5049d-4d8e-4e41-a7ae-bd76c94f2691",
+                        "name": null,
+                        "quantity": "1",
+                        "unitary_value": null,
+                        "weight": null
+                    }
+                ]
+            }
+        ],
+        "additional_services": {
+            "receipt": "false",
+            "own_hand": "false",
+            "collect": "false"
+        },
+        "company": {
+            "id": 1,
+            "name": "Correios",
+            "picture": "http://sandbox.melhorenvio.com.br/images/shipping-companies/correios.png",
+            "status": null,
+            "use_own_contract": false
+        }
+    },
+    {
+        "id": "2",
+        "name": "SEDEX",
+        "error": null,
+        "price": "110.44",
+        "custom_price": "110.44",
+        "discount": "19.37",
+        "currency": "R$",
+        "delivery_time": "9",
+        "delivery_range": {
+            "min": "8",
+            "max": "9"
+        },
+        "custom_delivery_time": "9",
+        "custom_delivery_range": {
+            "min": "8",
+            "max": "9"
+        },
+        "packages": [
+            {
+                "price": "110.44",
+                "discount": "19.37",
+                "format": "box",
+                "weight": "1.90",
+                "insurance_value": "150.20",
+                "dimensions": {
+                    "height": "21",
+                    "width": "30",
+                    "length": "30"
+                },
+                "products": [
+                    {
+                        "id": "430d5257-5b38-4ee3-aa77-2009340d0a65",
+                        "name": null,
+                        "quantity": "1",
+                        "unitary_value": null,
+                        "weight": null
+                    },
+                    {
+                        "id": "5507476a-55f4-46a7-9c24-d076bcc43c2a",
+                        "name": null,
+                        "quantity": "2",
+                        "unitary_value": null,
+                        "weight": null
+                    },
+                    {
+                        "id": "e8c5049d-4d8e-4e41-a7ae-bd76c94f2691",
+                        "name": null,
+                        "quantity": "1",
+                        "unitary_value": null,
+                        "weight": null
+                    }
+                ]
+            }
+        ],
+        "additional_services": {
+            "receipt": "false",
+            "own_hand": "false",
+            "collect": "false"
+        },
+        "company": {
+            "id": 1,
+            "name": "Correios",
+            "picture": "http://sandbox.melhorenvio.com.br/images/shipping-companies/correios.png",
+            "status": null,
+            "use_own_contract": false
+        }
+    },
+    {
+        "id": "3",
+        "name": ".Package",
+        "error": null,
+        "price": "122.33",
+        "custom_price": "122.33",
+        "discount": "13.41",
+        "currency": "R$",
+        "delivery_time": "13",
+        "delivery_range": {
+            "min": "12",
+            "max": "14"
+        },
+        "custom_delivery_time": "13",
+        "custom_delivery_range": {
+            "min": "12",
+            "max": "14"
+        },
+        "packages": [
+            {
+                "price": null,
+                "discount": null,
+                "format": "box",
+                "weight": "1.90",
+                "insurance_value": "150.20",
+                "dimensions": {
+                    "height": "21",
+                    "width": "30",
+                    "length": "30"
+                },
+                "products": [
+                    {
+                        "id": "430d5257-5b38-4ee3-aa77-2009340d0a65",
+                        "name": null,
+                        "quantity": "1",
+                        "unitary_value": null,
+                        "weight": null
+                    },
+                    {
+                        "id": "5507476a-55f4-46a7-9c24-d076bcc43c2a",
+                        "name": null,
+                        "quantity": "2",
+                        "unitary_value": null,
+                        "weight": null
+                    },
+                    {
+                        "id": "e8c5049d-4d8e-4e41-a7ae-bd76c94f2691",
+                        "name": null,
+                        "quantity": "1",
+                        "unitary_value": null,
+                        "weight": null
+                    }
+                ]
+            }
+        ],
+        "additional_services": {
+            "receipt": "false",
+            "own_hand": "false",
+            "collect": "false"
+        },
+        "company": {
+            "id": 2,
+            "name": "Jadlog",
+            "picture": "http://sandbox.melhorenvio.com.br/images/shipping-companies/jadlog.png",
+            "status": null,
+            "use_own_contract": false
+        }
+    },
+    {
+        "id": "4",
+        "name": ".Com",
+        "error": null,
+        "price": "82.20",
+        "custom_price": "82.20",
+        "discount": "113.11",
+        "currency": "R$",
+        "delivery_time": "12",
+        "delivery_range": {
+            "min": "11",
+            "max": "13"
+        },
+        "custom_delivery_time": "12",
+        "custom_delivery_range": {
+            "min": "11",
+            "max": "13"
+        },
+        "packages": [
+            {
+                "price": null,
+                "discount": null,
+                "format": "box",
+                "weight": "1.90",
+                "insurance_value": "150.20",
+                "dimensions": {
+                    "height": "21",
+                    "width": "30",
+                    "length": "30"
+                },
+                "products": [
+                    {
+                        "id": "430d5257-5b38-4ee3-aa77-2009340d0a65",
+                        "name": null,
+                        "quantity": "1",
+                        "unitary_value": null,
+                        "weight": null
+                    },
+                    {
+                        "id": "5507476a-55f4-46a7-9c24-d076bcc43c2a",
+                        "name": null,
+                        "quantity": "2",
+                        "unitary_value": null,
+                        "weight": null
+                    },
+                    {
+                        "id": "e8c5049d-4d8e-4e41-a7ae-bd76c94f2691",
+                        "name": null,
+                        "quantity": "1",
+                        "unitary_value": null,
+                        "weight": null
+                    }
+                ]
+            }
+        ],
+        "additional_services": {
+            "receipt": "false",
+            "own_hand": "false",
+            "collect": "false"
+        },
+        "company": {
+            "id": 2,
+            "name": "Jadlog",
+            "picture": "http://sandbox.melhorenvio.com.br/images/shipping-companies/jadlog.png",
+            "status": null,
+            "use_own_contract": false
+        }
+    },
+    {
+        "id": "17",
+        "name": "Mini Envios",
+        "error": "Dimensões do objeto ultrapassam o limite da transportadora.",
+        "price": null,
+        "custom_price": null,
+        "discount": null,
+        "currency": null,
+        "delivery_time": null,
+        "delivery_range": null,
+        "custom_delivery_time": null,
+        "custom_delivery_range": null,
+        "packages": null,
+        "additional_services": null,
+        "company": {
+            "id": 1,
+            "name": "Correios",
+            "picture": "http://sandbox.melhorenvio.com.br/images/shipping-companies/correios.png",
+            "status": null,
+            "use_own_contract": false
+        }
+    }
+]
