@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.fantonel.excepts.LojaVirtualExceptions;
@@ -92,5 +93,18 @@ public class AcessoController {
 			return ResponseEntity.status(HttpStatus.OK).body(entity.get());
 		else
 			throw new LojaVirtualExceptions("Usuário com descrição "+descricao+" não encontrado!");
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/temAcessoRole/{userName}/{role}")
+	public ResponseEntity<Boolean> temAcessoRole(@PathVariable String userName, @PathVariable String role) throws LojaVirtualExceptions{
+		boolean result = true;
+		if (userName == null || userName.trim().equals("") || role == null || role.trim().equals(""))
+			result = false;
+		//
+		String roleIn = "'"+role.replace(",", "','")+"'";
+		result = acessoService.temAcessoRole(userName, roleIn);
+		//		
+		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 }
