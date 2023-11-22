@@ -131,14 +131,18 @@
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-client</artifactId>
 			<version>1.19.4</version>
-		</dependency>
-		
+		</dependency>		
 		
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-multipart</artifactId>
 			<version>2.27</version>
-		</dependency>	
+		</dependency>
+		
+	   	<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>			
 	</dependencies>
 	<build>
 		<plugins>
